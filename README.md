@@ -1,12 +1,20 @@
 # TCRcost
-## TCRcost: A deep learning model reveals TCR 3D structure achieves better prediction on TCR-peptide binding
+TCRcost: A deep learning model reveals TCR 3D structure achieves better prediction on TCR-peptide binding
+------------------------------
+
 In this study, we developed among one of the first deep learning methods, named TCRcost, to predict TCR-peptide binding by incorporating corrected 3D structures.
+
+![](Figure/TCRcost.png)
+
 ## Content
-[Project Organization](#Project Organization)
 
-[Usage](#Usage)
+- [Project Organization](#project-organization)
+- [Usage](#usage)
+  - [Python package versions](#python-package-versions)
+  - [Correction Module](#correction-module)
+  - [Binding Prediction Module](#binding-prediction-module)
+- [Contacts](#contacts)
 
-[Contacts](#Contacts)
 ## Project Organization
 ```
 ├── LICENSE                         <- Non-commercial license.
@@ -53,7 +61,7 @@ In this study, we developed among one of the first deep learning methods, named 
     └── TCRcost.png
 ```
 ## Usage
-Python package versions
+### Python package versions
 TCRcost works perfectly in the following versions of the Python packages:
 ```
 Python          3.9.7
