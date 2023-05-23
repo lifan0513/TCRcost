@@ -1,13 +1,13 @@
 # TCRcost
-##TCRcost: A deep learning model reveals TCR 3D structure achieves better prediction on TCR-peptide binding
+## TCRcost: A deep learning model reveals TCR 3D structure achieves better prediction on TCR-peptide binding
 In this study, we developed among one of the first deep learning methods, named TCRcost, to predict TCR-peptide binding by incorporating corrected 3D structures.
 ## Content
-[Project Organization](##Project Organization)
+[Project Organization](#Project Organization)
 
-[Usage](##Usage)
+[Usage](#Usage)
 
-[Contacts](##Contacts)
-##Project Organization
+[Contacts](#Contacts)
+## Project Organization
 ```
 ├── LICENSE                         <- Non-commercial license.
 │     
@@ -52,7 +52,7 @@ In this study, we developed among one of the first deep learning methods, named 
 ├── Figure                          <- Figure used in README.
     └── TCRcost.png
 ```
-##Usage
+## Usage
 Python package versions
 TCRcost works perfectly in the following versions of the Python packages:
 ```
@@ -63,7 +63,7 @@ numpy           1.20.3
 scikit-learn    0.24.2
 ```
 ### Correction Module
-####Correcting structures using the pre-trained model
+#### Correcting structures using the pre-trained model
 Users can use the pre-trained models we provided in `./Correction_Module/model.pth` to correct CDR3A:CDR3B:peptide structures directly by this command:
 
 `python corrected_test.py --test_file_path ./data/test_af --test_save_path ./output --test_model model.pth --test_ref_path ./data/ref_data
@@ -78,13 +78,13 @@ And the rmsd scores of the complete structures and structures of main chains and
  side_RMSD:  11.049083564709838
  ```
  
-####Training correction models
+#### Training correction models
 Users can use the Python script `./Correction_Module/corrected_train.py` to train their own correction models on their TCR-peptide structure data samples for a better performance. For example, users can use the data files in `./Correction_Module/data/train_af` to train the model and save the model in `./Correction_Module/model_file` by this command:
 
 `python corrected_train.py --epoch 1000 --lr 0.05 --train_file_path ./data/train_af --train_real_file_path ./data/train_true --model_path ./model_file`
 
 ### Binding Prediction Module
-####Making predictions using the pre-trained model
+#### Making predictions using the pre-trained model
 Users can use the pre-trained models we provided in `./Binding_Prediction_Module/` to make predictions directly.
 First, we need to process the raw data files, such as `./Binding_Prediction_Module/data/real_structures`by this command:
 
@@ -102,9 +102,10 @@ Evaluation Summary:
 ACC: 0.947,AUC: 0.974,Recall: 1.000,Precision: 0.905,F1: 0.950
 ```
 
-####Training binding prediction models
+#### Training binding prediction models
 Users can use the Python script `./Binding_Prediction_Module/binding_train.py` to train their own binding prediction models on their TCR-peptide structure data samples for a better performance. For example, users can use the processed data file in `./Binding_Prediction_Module/data/Train.hdf` to train the model and save the model in `./Binding_Prediction_Module/model_file` by this command:
 
 `python binding_train.py --data-dir ./data --mlhdf-fn Train.hdf --model-path ./model_file --epoch-count 20 --learning-rate 0.005`
-##Contacts
+
+## Contacts
 TCRcost is actively maintained by Fan Li, currently students at Xi'an Jiaotong University in the research group of Prof. Jiayin Wang. If you have any questions, please contact us by e-mail: lifan0513@stu.xjtu.edu.cn.
