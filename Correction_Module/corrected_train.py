@@ -9,7 +9,7 @@ import numpy as np
 import alphafold_loss
 import LDDT_loss
 import structure_loss
-from corrected_model import cmodel
+from corrected_model
 import argparse
 
 
@@ -158,6 +158,69 @@ def train(batch_size=16,
     optimizer = optim.Adam([{"params":base_params},
         {"params":model.side_lstm.parameters(),"lr":1e-5},
         {"params":model.side_ln.parameters(),"lr":1e-5},], lr=learning_rate, betas=(0.9, 0.999), eps=1e-08)
+    
+    """
+    # 1DCNN model          
+    model = multi_task_3_1dcnn(verbose=0)
+    main_conv1 = list(map(id, model.main_conv1.parameters()))
+    main_bn1 = list(map(id, model.main_bn1.parameters()))
+    main_conv2 = list(map(id, model.main_conv2.parameters()))
+    main_bn2 = list(map(id, model.main_bn2.parameters()))
+    main_conv3 = list(map(id, model.main_conv3.parameters()))
+    main_bn3 = list(map(id, model.main_bn3.parameters()))
+    base_params = filter(lambda p: id(p) not in main_conv1 + main_conv2 + main_conv3 + main_bn1 + main_bn2 + main_bn3,
+                         model.parameters())
+    optimizer = optim.Adam([
+        {"params": base_params},
+        {"params": model.main_conv1.parameters(), "lr": 0.001},
+        {"params": model.main_bn1.parameters(), "lr": 0.001},
+        {"params": model.main_conv2.parameters(), "lr": 0.001},
+        {"params": model.main_bn2.parameters(), "lr": 0.001},
+        {"params": model.main_conv3.parameters(), "lr": 0.001},
+        {"params": model.main_bn3.parameters(), "lr": 0.001}
+        # {"params":model.side_lstm.parameters(),"lr":1e-5},
+        # {"params":model.side_ln.parameters(),"lr":1e-5},
+    ]
+        , lr=learning_rate, betas=(0.9, 0.999), eps=1e-08)
+        
+    # 2DCNN model
+    model = multi_task_3_2dcnn(verbose=0)
+    main_conv1 = list(map(id, model.main_conv1.parameters()))
+    main_bn1 = list(map(id, model.main_bn1.parameters()))
+    main_conv2 = list(map(id, model.main_conv2.parameters()))
+    main_bn2 = list(map(id, model.main_bn2.parameters()))
+    main_conv3 = list(map(id, model.main_conv3.parameters()))
+    main_bn3 = list(map(id, model.main_bn3.parameters()))
+    base_params = filter(lambda p: id(p) not in main_conv1 + main_conv2 + main_conv3 + main_bn1 + main_bn2 + main_bn3,
+                         model.parameters())
+    optimizer = optim.Adam([
+        {"params": base_params},
+        {"params": model.main_conv1.parameters(), "lr": 0.001},
+        {"params": model.main_bn1.parameters(), "lr": 0.001},
+        {"params": model.main_conv2.parameters(), "lr": 0.001},
+        {"params": model.main_bn2.parameters(), "lr": 0.001},
+        {"params": model.main_conv3.parameters(), "lr": 0.001},
+        {"params": model.main_bn3.parameters(), "lr": 0.001}
+        # {"params":model.side_lstm.parameters(),"lr":1e-5},
+        # {"params":model.side_ln.parameters(),"lr":1e-5},
+    ]
+        , lr=learning_rate, betas=(0.9, 0.999), eps=1e-08)
+
+        
+    # LSTM_ALL model
+    model = all_all_all(verbose=0)
+    optimizer = optim.Adam(model.parameters(), lr=learning_rate, betas=(0.9, 0.999), eps=1e-08)
+
+    # LSTM_SIDE model
+    model = all_side_all(verbose=0)
+    optimizer = optim.Adam(model.parameters(), lr=learning_rate, betas=(0.9, 0.999), eps=1e-08)
+    
+    # LSTM_MAIN model
+    model = all_main_all(verbose=0)
+    optimizer = optim.Adam(model.parameters(), lr=learning_rate, betas=(0.9, 0.999), eps=1e-08)
+    
+    """
+
 
     alphafold_data, alphafold_others, alphafold_files,alphafold_data_ca, alphafold_data_ca1,data_files_chain1_D,data_files_chain2_B,data_files_chain3_C = all_data_read(train_test_path)#+"/train_af")#"C:/Users/lifan/Desktop/model/change_alphafold_train"
     true_data, true_others, true_files,true_data_ca,true_data_ca1,_,_,_ = all_data_read(train_test_real_path)#(train_test_path+"/train_true")
@@ -217,6 +280,24 @@ def train(batch_size=16,
 
             optimizer.zero_grad()
 
+            """
+            #mse
+            loss_mse = nn.MSELoss().float()
+            loss_main = loss_mse(pre_main, true_main)/len(pre_main)
+            loss_side = loss_mse(pre_side, true_side)/len(pre_main)
+            loss_all = loss_mse(pre_all, true_all)/len(pre_main)
+            
+            # lddt
+            loss_side = 1 - LDDT_loss.lddt_loss(pre_side, true_side, None)
+            loss_main = 1 - LDDT_loss.lddt_loss(pre_main, true_main, None)
+            loss_all = 1 - LDDT_loss.lddt_loss(pre_all, true_all, None)
+            
+            # fape
+            loss_main = alphafold_loss.fape_loss(len(pre_main), None, pre_main, true_main, train=True)
+            loss_side = alphafold_loss.fape_loss(len(pre_side), None, pre_side, true_side, train=True)
+            loss_all = alphafold_loss.fape_loss(len(pre_all), true_ca, pre_all, true_all, train=True)
+            """
+            # TCRcost
             loss_main = alphafold_loss.fape_loss(len(pre_main), None, pre_main, true_main, train=True)
             loss_side = 1-LDDT_loss.lddt_loss(pre_side, true_side, None)
             loss_all = alphafold_loss.fape_loss(len(pre_all), true_ca, pre_all, true_all, train=True) + \
