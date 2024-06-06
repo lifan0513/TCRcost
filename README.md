@@ -91,6 +91,8 @@ Users can use the Python script `./Correction_Module/corrected_train.py` to trai
 
 `python corrected_train.py --epoch 1000 --lr 0.05 --train_file_path ./data/train_af --train_real_file_path ./data/train_true --model_path ./model_file`
 
+If you want to train the other models, you only need to make a slight modification in the code.
+
 ### Binding Prediction Module
 #### Making predictions using the pre-trained model
 Users can use the pre-trained models we provided in `./Binding_Prediction_Module/` to make predictions directly.
